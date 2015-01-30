@@ -1,0 +1,246 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{uniinput}
+\usepackage{proof}
+\usepackage[ngerman]{babel}
+\usepackage{xstring}
+\usepackage{ulem}
+\newcommand{\Herb}{\mathcal{H}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\bx}[1]{\bar{#1}}
+\newcommand{\bs}{\backslash}
+\newcommand{\sub}[1]
+{%
+	[\StrSubstitute{#1}{:}{\backslash}]%
+}
+\newcommand{\LK}{\textbf{LK}}
+
+%\mode<presentation>
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+
+\title[Cuts Without Quantifier Alternations]{Cuts Without Quantifier Alternations and Their Effect on Expansion Trees}
+\author{Sebastian Zivota}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+% \begin{frame}
+% 	\frametitle{Inhalt}
+% 	\tableofcontents
+% \end{frame}
+
+\section{Grundlagen}
+\begin{frame}
+	\frametitle{Formale Beweise}
+	\begin{definition}[Sequent]
+		$A_1,…,A_m \vdash B_1,…,B_n$ ($A_i,B_i$ Formeln). 
+	\end{definition}
+	Kurzschreibweise: $Γ\vdash Δ$\\
+	\uncover<2->{Natürliche Interpretation von $Γ \vdash Δ$:\\ „Aus allen Formeln in $Γ$ folgt eine Formel in $Δ$.“}
+	\uncover<3->{
+	\begin{definition}[Formaler Beweis]
+		Ein \alert{formaler Beweis} ist ein endlicher Wurzelbaum, der aus \alert{Inferenzen} der Form
+		\begin{align*}
+			\vcenter{\infer{Γ \vdash Δ}{Γ' \vdash Δ'}}\quad \text{ oder }\quad
+			\vcenter{\infer{Γ \vdash Δ}{Γ' \vdash Δ' & Γ'' \vdash Δ''}}
+		\end{align*}
+		zusammengesetzt ist. An den Blättern stehen Sequente der Form $A \vdash A$.
+	\end{definition}}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Regeln von \LK}
+	Wir verwenden den Kalkül \LK\ (Gentzen 1934).
+	%\only<1>{
+	\begin{block}{Beispiele für Inferenzen von \LK (\only<1>{einfache}\only<2->{allgemeine} Version)}
+		\begin{align*}
+			\infer[∧_r]{Γ \vdash A ∧ B\uncover<2->{, Δ}}{Γ\vdash A\uncover<2->{, Δ} & Γ \vdash B\uncover<2->{, Δ}} & & &
+ 			\infer[∨_r]{Γ \vdash A ∨ B\uncover<2->{, Δ}}{Γ \vdash A\uncover<2->{, Δ}} \\\vspace*{0.5cm}
+ 			\infer[\exists_r]{Γ \vdash \exists x A(x)\uncover<2->{, Δ}}{Γ \vdash A(t)\uncover<2->{, Δ}} & & &
+ 			\infer[\forall_r]{Γ \vdash \forall x A(x)\uncover<2->{, Δ}}{Γ \vdash A(α)\uncover<2->{, Δ}}
+		\end{align*}
+	\end{block}%}
+% 	\only<2->{
+% 	\begin{block}{Beispiele für Inferenzen von \LK}
+% 		\begin{align*}
+% 			\infer[∧_r]{Γ \vdash \only<2->{Δ,} A ∧ B}{Γ\vdash \only<2->{Δ,} A & Γ \vdash \only<2->{Δ,} B} & & &
+%  			\infer[∨_r]{Γ \vdash \only<2->{Δ,} A ∨ B}{Γ \vdash \only<2->{Δ,} A} \\\vspace*{0.5cm}
+%  			\infer[\exists_r]{Γ \vdash \only<2->{Δ,} \exists x A(x)}{Γ \vdash \only<2->{Δ,} A(t)} & & &
+%  			\infer[\forall_r]{Γ \vdash \only<2->{Δ,} \forall x A(x)}{Γ \vdash \only<2->{Δ,} A(α)}
+% 		\end{align*}
+% 	\end{block}}
+	\uncover<3->{Analog: $l$-Regeln für die linke Seite.}
+	\uncover<4->{
+	\begin{definition}[Schnittregel, \only<4>{einfache}\only<5->{vollständige} Version]
+		\begin{align*}
+			\infer[cut]{Γ \vdash \only<4>{B}\only<5->{Δ}}{Γ \vdash \only<5->{Δ,} A & A, Γ \vdash \only<4>{B}\only<5->{Δ}}
+		\end{align*}
+		$A$ ist die \alert{Schnittformel} des Schnitts.
+	\end{definition}}
+\end{frame}
+% \begin{frame}
+% 	\frametitle{Die Schnittregel}
+% 	\only<1>{
+% 	
+% 	\uncover<3->{Beweise, die die Schnittregel nicht verwenden, heißen \alert{schnittfrei}.}
+% 	\uncover<4->{
+% 	\begin{theorem}[Gentzens Hauptsatz]
+% 		Jeder Beweis $π$ lässt sich algorithmisch in einen schnittfreien Beweis $π^*$ transformieren.
+% 	\end{theorem}
+% 	Den im Hauptsatz beschriebenen Transformationsprozess nennen wir \alert{Schnittelimination}.}
+% \end{frame}
+
+\section{Schnittelimination}
+\begin{frame}
+	\frametitle{Schnittelimination}
+	\begin{theorem}[Gentzens Hauptsatz]
+		Jeder Beweis $π$ lässt sich algorithmisch in einen schnittfreien Beweis $π^*$ transformieren.
+	\end{theorem}
+	Jeder Algorithmus, der das leistet, heißt \alert{Schnittelimination}.
+	\begin{block}{Beispiel}<2->
+	\begin{align*}
+		%\vcenter
+		{
+		\infer{Γ \vdash Δ}
+		{
+			\infer
+			{Γ \vdash Δ, \forall x A(x)}
+			{\deduce{Γ \vdash Δ, A(α)}{(φ)}}
+		&
+			\infer
+			{\forall x A(x), Γ \vdash Δ}
+			{\deduce{A(t), Γ \vdash Δ}{(ψ)}}
+		}}\quad \raisebox{5mm}{$\leadsto$}\quad
+		%\vcenter
+		{
+		\infer{Γ \vdash Δ}
+		{
+			\deduce{Γ \vdash Δ, A(t)}{(φ')}
+		&
+			\deduce{A(t), Γ \vdash Δ}{(ψ)}
+		}}
+	\end{align*}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Schnittelimination – warum?}
+	\begin{enumerate}
+		\item<1-> Klassische Anwendung: Syntaktische Konsistenzbeweise
+		\item<2-> Hier relevant: Auslesen von konstruktivem Inhalt (Zeugen, Schranken, etc.) aus Beweisen
+	\end{enumerate}
+	\begin{definition}[Herbrand-Menge]<3->
+		Eine \alert{Herbrand-Menge} für eine Formel $\exists x A(x)$, A qf., ist eine Menge $M$, sodass
+		\begin{enumerate}
+			\item es Terme $t_1,…,t_n$ gibt mit $M = \{A({t}_1),…,A({t}_n)\}$ und
+			\item $\bigvee M$ eine Tautologie ist.
+		\end{enumerate}
+	\end{definition}
+
+	\begin{theorem}[Satz von Herbrand, einfache Version]<4->
+		Sei $π^*$ ein schnittfreier Beweis von $\vdash \exists {x} A({x})$, $A$ qf. Dann können wir aus $π^*$ algorithmisch eine Herbrand-Menge $\Herb(π^*)$ gewinnen.
+	\end{theorem}
+	\end{frame}
+% 	\only<4->
+% 	{}
+\begin{frame}
+\frametitle{Expansionsbäume}
+\begin{itemize}
+	\item \alert{Expansionsbäume} sind Verallgemeinerung von Herbrand-Mengen für komplexere Formeln: Menge von Instanzen zusammen mit aussagenlogischer Struktur.\\
+	\uncover<2->{\item \alert{Expansionsbeweise} sind Verallgemeinerung von Expansionsbäumen für Sequente.}
+\end{itemize}
+\begin{theorem}[Satz von Herbrand, komplexe Version]<3->
+ 		Sei $π^*$ ein schnittfreier Beweis von $Γ\vdash Δ$. Dann können wir aus $π^*$ algorithmisch einen Expansionsbeweis $\mathcal{E}\vdash \mathcal{F}$ von $Γ \vdash Δ$ gewinnen.
+ 	\end{theorem}
+
+	\uncover<4->{
+	Problem: Der aus einem Beweis $π$ gewonnene schnittfreie Beweis $π^*$ kann sehr groß sein. Daher:
+	\begin{block}{Frage}
+		Wie können wir aus einem Beweis $π$ eine Herbrand-Menge extrahieren, ohne tatsächlich die Schnittelimination durchzuführen?
+	\end{block}}
+\end{frame}
+	
+\begin{frame}
+	\frametitle{Baumgrammatiken (Jacquemard)}
+	Lösung von Spezialfällen durch \alert{total rigide Baumgrammatiken}:
+	\begin{block}{Beispiel} Grammatik $G = $
+		\begin{align*}
+			φ &→ f(x,y)\\
+			x &→ a|g(y),\quad y → a|b
+		\end{align*}
+	erzeugt Sprache $L(G) = \{f(a,a), f(a,b), f(g(a),a), f(g(b), b)\}$.
+	\end{block}
+
+	\uncover<2->{\begin{theorem}[Hetzl, 2012]
+		Sei $π$ ein Beweis, sodass
+		\begin{enumerate}
+			\item<2-> das Endsequent von $π$ von der Form $\vdash \exists \bx{x} A(\bx{x})$ mit $A$ qf. ist;
+			\item<3-> alle Schnittformeln in $π$ von der Form $\exists y B(y)$ mit $B$ qf. sind.
+		\end{enumerate}
+		\uncover<4->{Dann gibt es eine total rigide Baumgrammatik $G(π)$, sodass $L(G(π))$ eine Herbrand-Menge ist.}
+	\end{theorem}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Constrained Grammars}
+	Zur Behandlung von komplexeren Fällen verwenden wir \alert{constrained grammars}.
+	\begin{definition}
+		Eine constrained Grammar $G = \langle φ,N,Σ,P,\C\rangle$ ist eine Baumgrammatik $\langle φ,N,Σ,P\rangle$  zusammen mit einer aussagenlogischen Formel $\C$, die Produktionen von $G$ als Atome verwendet. $\C$ heißt \alert{constraint formula}.
+	\end{definition}
+	\uncover<2->{$\C$ legt erlaubte Kombinationen von Produktionen fest}
+	\begin{block}{Zweck der constrained grammars}<3->
+		Mit constrained grammars können wir Schnittformeln mit geschachtelten Quantoren behandeln.
+	\end{block}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Hauptresultat der Arbeit}
+	\begin{theorem}
+		Sei $π$ ein Beweis, sodass
+		\begin{enumerate}
+			\item<1-> das Endsequent von $π$ von der Form $\vdash \exists \bx{x} A(\bx{x}) ∨ \exists \bx{y} B(\bx{y})$ mit $A,B$ qf. ist;
+			\item<2-> keine Schnittformel in $π$ Quantorenalternationen enthält.
+		\end{enumerate}
+		\uncover<3->{Dann gibt es eine constrained grammar $G(π)$, sodass $L(G(π))$ eine Herbrand-Menge ist.}
+	\end{theorem}
+	\uncover<4->{
+	\begin{block}{Beweisskizze}
+		\begin{enumerate}
+			\item<4-> Wenn $π$ keine oder nur „triviale“ Schnitte enthält, dann ist $L(G(π))$ eine Herbrand-Menge.
+			\item<5-> Wenn wir schrittweise die Schnittelimination ausführen, dann wird die Sprache niemals größer.
+		\end{enumerate}
+	\end{block}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Verallgemeinerung des Resultats}
+	Das Hauptresultat kann leicht verallgemeinert werden:
+	\begin{theorem}
+		Sei $π$ ein Beweis von $Γ \vdash Δ$, sodass
+		\begin{enumerate}
+			%\only<1-2>{\only<2->{\sout}{ $\vdash \exists \bx{x} A(\bx{x}) ∨ \exists \bx{y} B(\bx{y})$ mit $A,B$ qf.}}%
+			\item<1->$Γ$ nur aus Formeln der Form $\mathcal{B}[\forall \bx{x}_1 A_1(\bx{x}_1),…,\forall \bx{x}_m A_m(\bx{x}_m)]$ mit $A_1,…,A_m$ qf. besteht;
+			\item<1->$Δ$ nur aus Formeln der Form $\mathcal{B}[\exists \bx{y}_1 B_1(\bx{y}_1),…,\exists \bx{y}_n B_n(\bx{y}_n)]$ mit $B_1,…,B_n$ qf. besteht;
+			%\only<1-2>{\only<2>{\sout}{ ist;}}
+			%\only<3->{\item das Endsequent von $π$ von der Form $\vdash\mathcal{B}[\exists \bx{x}_1 A_1(\bx{x}_1),…,\exists \bx{x}_n A_n(\bx{x}_n)]$ mit $A_1,…,A_n$ qf. ist;}
+			\item keine Schnittformel in $π$ Quantorenalternationen enthält.
+		\end{enumerate}
+		Dann gibt es eine constrained grammar $G(π)$, sodass $L(G(π))$ eine Herbrand-Menge ist.
+	\end{theorem}
+	\uncover<1->{$\mathcal{B}$ steht für eine Kombination aus $∨,∧$}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+	\large Danke für Ihre Aufmerksamkeit!
+	\end{center}
+\end{frame}
+\end{document}
