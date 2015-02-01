@@ -6,6 +6,11 @@
 \usepackage{xstring}
 \usepackage{ulem}
 
+\newcommand{\L}{\mathcal{L}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\P}{\mathcal{P}}
+
 \usetheme{Madrid}
 \usecolortheme{seahorse}
 \setbeamertemplate{navigation symbols}{}
@@ -23,6 +28,21 @@
 % 	\frametitle{Inhalt}
 % 	\tableofcontents
 % \end{frame}
+
+\begin{frame}
+	\frametitle{Fagin's Theorem}
+	Goal: Machine-independent characterization of complexity classes
+	\begin{definition}
+		Let $\mathcal{K}$ be a complexity class and $\mathcal{L}$ a logic. We say that $\L$ captures $\K$ iff the following holds:
+		\begin{enumerate}
+			\item For every sentence $Φ$ of $\L$ and every finite structure $\A$, deciding whether $\A \vDash Φ$ is in $\K$;
+			\item For every property $\P$ of finite structures that can be decided in $\K$ there is a sentence $Φ$ of $\L$ such that $\A$ has property $\P$ iff $\A \vDash Φ$.
+		\end{enumerate}
+	\end{definition}
+	\begin{theorem}[Fagin]
+		$∃SO$ captures NP.
+	\end{theorem}
+\end{frame}
 
 
 \end{document}
