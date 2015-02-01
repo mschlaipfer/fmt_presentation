@@ -6,10 +6,10 @@
 \usepackage{xstring}
 \usepackage{ulem}
 
-\newcommand{\L}{\mathcal{L}}
+\renewcommand{\L}{\mathcal{L}}
 \newcommand{\K}{\mathcal{K}}
 \newcommand{\A}{\mathcal{A}}
-\newcommand{\P}{\mathcal{P}}
+\renewcommand{\P}{\mathcal{P}}
 
 \usetheme{Madrid}
 \usecolortheme{seahorse}
@@ -30,18 +30,45 @@
 % \end{frame}
 
 \begin{frame}
-	\frametitle{Fagin's Theorem}
+	
 	Goal: Machine-independent characterization of complexity classes
 	\begin{definition}
 		Let $\mathcal{K}$ be a complexity class and $\mathcal{L}$ a logic. We say that $\L$ captures $\K$ iff the following holds:
 		\begin{enumerate}
-			\item For every sentence $Φ$ of $\L$ and every finite structure $\A$, deciding whether $\A \vDash Φ$ is in $\K$;
-			\item For every property $\P$ of finite structures that can be decided in $\K$ there is a sentence $Φ$ of $\L$ such that $\A$ has property $\P$ iff $\A \vDash Φ$.
+			\item For every sentence $Φ$ of $\L$ and every finite structure $\A$, it is decidable in $\K$ whether $\A \vDash Φ$;
+			\item For every property $\P$ of finite structures decidable in $\K$ there is a sentence $Φ$ of $\L$ such that $\A$ has property $\P$ iff $\A \vDash Φ$.
 		\end{enumerate}
 	\end{definition}
-	\begin{theorem}[Fagin]
-		$∃SO$ captures NP.
-	\end{theorem}
+	\medskip
+	Briefly: We say that $\L$ captures $\K$ if the properties that can be decided in $\K$ are exactly those that can be defined in $\L$.
+	
+	\medskip
+	
+	Application: Show that complexity classes are different by showing that their capturing logics are different.
+\end{frame}
+
+\begin{frame}
+\frametitle{Fagin's Theorem}
+Reminder: $\exists SO$ is second order predicate logic with only existential quantifiers.
+  \begin{theorem}[Fagin]
+    $∃SO$ captures $NP$.
+  \end{theorem}
+  First machine-independent characterization of a complexity class   
+\end{frame}
+\begin{frame}
+ \begin{corollary}
+  $\forall SO$ captures $coNP$.
+ \end{corollary}
+  Application to the $P = NP$ problem:
+  \begin{equation*}
+   \forall SO \neq \exists SO \Rightarrow coNP \neq NP \Rightarrow P \neq NP
+  \end{equation*}
+
+\end{frame}
+
+\begin{frame}
+ \frametitle{Proof of Fagin's theorem}
+ Easy direction: Let $Φ$ be a sentence of $\exists SO$ and $\A$ a structure. Suppose $Φ = \exists S_1 … \exists S_n φ$ with $φ$ FO. Checking whether $\A \vDash Φ$ can be done by guessing $S_1,…,S_n$ and then checking $\A \vDash φ(S_1,…,S_n)$. The latter part is polynomial in $|\A|$.
 \end{frame}
 
 
