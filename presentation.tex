@@ -5,6 +5,7 @@
 \usepackage[english]{babel}
 \usepackage{xstring}
 \usepackage{ulem}
+\usepackage{boxedminipage} 
 
 \usepackage{tikz}
 \usetikzlibrary{chains,fit,shapes}
@@ -33,6 +34,9 @@
 \newcommand{\SO}{\ensuremath{\mathrm{SO}}}
 \newcommand{\FO}{\ensuremath{\mathrm{FO}}}
 \newcommand{\structa}{\ensuremath{\mathfrak{A}}}
+\newcommand{\minel}{\ensuremath{\underline{\mathrm{min}}}}
+\newcommand{\blankcell}{\ensuremath{T_{\Box}}}
+\newcommand{\nonblankcell}{\ensuremath{T_{\blacksquare}}}
 
 \title{Turing Machines and Finite Models}
 \author{Matthias Schlaipfer \and Sebastian Zivota}
@@ -48,7 +52,7 @@
 %	\tableofcontents
 %\end{frame}
 
-\begin{frame}[plain]
+\begin{frame}
   \frametitle{Outlook}
   \begin{itemize}
     \item Connection between finite model theory and complexity theory
@@ -117,14 +121,23 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Some results on TM}
+  \frametitle{Some Results on TM}
 
   \begin{itemize}
     \item The \textbf{halting problem} is undecidable.
     \item The \textbf{blank tape halting problem} is undecidable.
-    \begin{itemize}
-      \item %TODO
-    \end{itemize}
+      \begin{center}
+        \begin{boxedminipage}{.5\textwidth}
+          \begin{tabbing}
+            \quad\=\quad\=\quad\=\kill\\
+                {\tt halts}$(M,x)$\\
+                \>{\tt if} $\mathsf{encode}(\mathsf{sim}(M, x)) \in \mathbf{BTHP}$\\
+                \>\>yes\\
+                \>{\tt else}\\
+                \>\>no\\
+          \end{tabbing}
+        \end{boxedminipage}
+      \end{center}
   \end{itemize}
 
   
@@ -149,7 +162,7 @@
 \section{Trakhtenbrot's Theorem}
 
 \begin{frame}
-  \frametitle{Trakthenbrot's Theorem and Failure of Completeness}
+  \frametitle{Trakhtenbrot's Theorem and Failure of Completeness}
 
   \begin{definition}[Finite Satisfiability]
     Given a vocabulary $\sigma$, a sentence $\phi$ in that vocabulary is called
@@ -176,6 +189,81 @@
     such that $\phi_M$ is finitely satisfiable iff $M$ halts on the empty input.
   \end{itemize}
 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Encoding}
+
+  \centering
+  \begin{enumerate}
+    \only<1->{\item $<$ is a linear order and $\minel$ is its minimal element}
+    \only<2->{\item Initially tape is blank}
+      \only<2>{\begin{align*}
+        H_{q_0}(\minel, \minel) \wedge \forall p \blankcell(p, \minel)
+      \end{align*}}
+    \only<3->{\item Either a cell is blank or not}
+      \only<3>{\begin{align*}
+        \forall p \forall t
+        \left(\blankcell(p, t)
+        \Leftrightarrow \neg \nonblankcell(p, t)\right)
+      \end{align*}}
+    \only<4->{\item Machine is in one state at a time}
+      \only<4>{\begin{align*}
+        \forall t \exists !p &\left( \bigvee_{q \in Q} H_q(p,t) \right)
+        \wedge \\ \neg \exists p \exists t &\left( \bigvee_{q, q' \in Q, q \neq q'}
+        H_q(p, t) \wedge H_{q'}(p,t) \right)
+      \end{align*}}
+    \only<5->{\item Machine respects the transition relation}
+    %TODO
+      \only<5>{\small \begin{align*}
+        \forall p \forall t 
+        \left(
+          \begin{array}{cc}
+                   & p = \minel\\
+            \wedge & \blankcell(p, t)\\
+            \wedge & H_q(p,t)
+          \end{array}
+        \right)
+          \Rightarrow
+        \left(
+          \begin{array}{cc}
+                   & \nonblankcell(p, t+1)\\
+            \wedge & H_{q'}(p, t+1)\\
+            \wedge &
+              \begin{array}[x]{@{}c@{}} 
+            \forall p' \left(p \neq p' \Rightarrow \right. \\ \left. \left( \bigwedge_{i =
+            \Box,\blacksquare} T_i(p',t+1) \Leftrightarrow
+            T_i(p',t)\right)\right)
+              \end{array}
+          \end{array}
+        \right)
+      \end{align*}}
+    \only<6->{\item Finally, the machine halts}
+      \only<6>{\begin{align*}
+        \exists p \exists t \bigvee_{q \in Q_a \cup Q_r} H_q(p,t)
+      \end{align*}}
+  \end{enumerate}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof Argument}
+
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Corollaries}
+
+  \begin{corollary}[Failure of completeness in the finite]
+    For any vocabulary containing at least one binary relation symbol, the set
+    of finitely valid sentences is not recursively enumerable.
+  \end{corollary}
+
+  \begin{corollary}[No analog to Löwenheim-Skolem for finite models]
+    There is no recursive function $f$ such that if $\phi$ has a finite model,
+    then it has a model of size at most $f(\phi)$.
+  \end{corollary}
   
 \end{frame}
 
