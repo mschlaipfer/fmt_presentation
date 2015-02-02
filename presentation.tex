@@ -89,7 +89,7 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 	
 	Intended interpretation of the predicates:
 	\begin{itemize}
-	\item $L$ is a linear order.
+	\item $L$ is a linear order. Define lexicographic order $<_k$ based on $L$.
 	\item $T_{*}(\bar{p}, \bar{t}) \leftrightarrow$ tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
 	\item $H_{q_i}(\bar{p},\bar{t}) \leftrightarrow$ at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{t}$.
 	\end{itemize}
@@ -106,8 +106,52 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 		\bigvee_{(q',a',mv) ∈ δ(q,a)} α_{(q,a,q',a',mv)},
 		\end{equation*}
 		where $α_{(q,a,q',a',mv)}$ is as in the previous proof.
-		\item Formulas $ι(\bar{p})$ and $ξ(\bar{p})$ describing the input.
+		\item A formula describing the initial state of the tape (i.e. $enc(\A)$):
+		\begin{equation*}
+		∀\bar{p}∀\bar{t}\left(¬∃\bar{u} (\bar{u} <_k \bar{t}) → \left[
+		\begin{array}{rcl}
+		ι(\bar{p},\bar{t})&\leftrightarrow&T_1(\bar{p},\bar{t})\\
+		∧\ ξ(\bar{p},\bar{t})&\leftrightarrow&T_{\_}(\bar{p},\bar{t})
+		\end{array}		
+		\right]\right)
+		\end{equation*}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Construction of $ι(\bar{p})$ and $ξ(\bar{p})$}
+	\begin{align*}
+	ι(\bar{p}) &\leftrightarrow enc(\A) \text{ contains $1$ at position } \bar{p}\\
+	ξ(\bar{p}) &\leftrightarrow \bar{p} \text{ is outside of } enc(\A)
+	\end{align*}	
+	Example: $\A = (A, E)$ graph with $n$ elements $\{0,…,n-1\}$
+	
+	$enc(\A) = 0^n1s$, with $s$ a string of length $n^2$ that encodes $E$:
+	\begin{equation*}
+	s(in+j) = 1 \leftrightarrow i E j
+	\end{equation*}
+	
+	Suppose $k = 3$. Then a tuple $\bar{p} = (p_1,p_2,p_3)$ represents the position $p_1 n^2 + p_2 n + p_3$.
+	
+	Encoding of $E$ runs from position $n+1$ to $n^2 + n$.
+	
+%	\begin{align*}
+%	p_1 > 1 &\Rightarrow ι(\bar{p}) = \bot\\
+%	p_1 = p_2 = 0 &\Rightarrow ι(\bar{p}) = \bot\\
+%	p_1 = 0, p_2,p_3 \neq 0 &\Rightarrow ι(\bar{p}) = E(p_2-1, p_3-1)\\
+%	p_1 = p_3 = 0, p_2 \neq 0 &\Rightarrow ι(\bar{p}) = E(p_2-2, n-1)
+%	\end{align*}
+
+	\begin{align*}
+	ι(\bar{p}) &= \left[\left(\begin{array}{rcl}
+	p_1 &=& 0 \\
+	∧\ p_2 &>& 0
+	\end{array}\right) ∧ \left(\begin{array}{rclcl}
+	p_3 &\neq& 0 &∧& E(p_2-1, p_3-1)\\
+	∨\ p_3 &=& 0 &∧& E(p_2-2, n-1)
+	\end{array}\right)\right]\\
+	&∨\ \left[p_1 = 0 ∧ p_2 = 1 ∧ p_3 = 0\right] ∨ \left[p_1 = 1 ∧ … \right]
+	\end{align*}
 \end{frame}
 
 
