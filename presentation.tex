@@ -1,10 +1,7 @@
 \documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{uniinput}
-\usepackage{proof}
 \usepackage[english]{babel}
-\usepackage{xstring}
-\usepackage{ulem}
 
 \renewcommand{\L}{\mathcal{L}}
 \newcommand{\K}{\mathcal{K}}
@@ -39,7 +36,9 @@
 			\item For every property $\P$ of finite structures decidable in $\K$ there is a sentence $Φ$ of $\L$ such that $\A$ has property $\P$ iff $\A \vDash Φ$.
 		\end{enumerate}
 	\end{definition}
+	
 	\medskip
+	
 	Briefly: We say that $\L$ captures $\K$ if the properties that can be decided in $\K$ are exactly those that can be defined in $\L$.
 	
 	\medskip
@@ -68,7 +67,47 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 
 \begin{frame}
  \frametitle{Proof of Fagin's theorem}
- Easy direction: Let $Φ$ be a sentence of $\exists SO$ and $\A$ a structure. Suppose $Φ = \exists S_1 … \exists S_n φ$ with $φ$ FO. Checking whether $\A \vDash Φ$ can be done by guessing $S_1,…,S_n$ and then checking $\A \vDash φ(S_1,…,S_n)$. The latter part is polynomial in $|\A|$.
+ Easy direction: Let $Φ$ be a sentence of $\exists SO$ and $\A$ a structure. Suppose $Φ = \exists S_1 … \exists S_n φ$ with $φ$ FO. Checking whether $\A \vDash Φ$ can be done by guessing $S_1,…,S_n$ and then checking $\A \vDash φ(S_1,…,S_n)$. The latter part is polynomial in $\|\A\|$.
+ 
+ \medskip
+ 
+ Hard direction: Similar to proof of Trakhtenbrot's theorem, but a bit more involved.
+ \begin{itemize}
+ 	\item Given: ND Turing machine $M$ that takes encodings of structures as input and tests whether property $\P$ holds.
+ 	\item If $n$ is the size of the structure, assume that the machine runs in time $n^k$ for some $k$ and visits the entire input.
+ 	\item Can describe both time and space on tape as $k$-tuples of elements of the model.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Hard direction, ctd.}
+	We seek to construct a sentence
+	\begin{equation*}
+	∃L ∃T_0 ∃T_1 ∃T_{\_} ∃H_{q_0} … ∃H_{q_{m-1}} Ψ,
+	\end{equation*}
+	where $L$ is binary and the other predicates are $2k$-ary.
+	
+	Intended interpretation of the predicates:
+	\begin{itemize}
+	\item $L$ is a linear order.
+	\item $T_{*}(\bar{p}, \bar{t}) \leftrightarrow$ tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
+	\item $H_{q_i}(\bar{p},\bar{t}) \leftrightarrow$ at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{t}$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Construction of $Ψ$}
+	$Ψ$ is a conjunction of several formulas:
+	\begin{itemize}
+		\item $L$ is a linear order.
+		\item Tape and state are well-defined and the machine eventually arrives in an accepting state. Exactly as in the proof of Trakhtenbrot.
+		\item Sentences describing the transition function: For $a ∈ Δ, q ∈ Q$,
+		\begin{equation*}
+		\bigvee_{(q',a',mv) ∈ δ(q,a)} α_{(q,a,q',a',mv)},
+		\end{equation*}
+		where $α_{(q,a,q',a',mv)}$ is as in the previous proof.
+		\item Formulas $ι(\bar{p})$ and $ξ(\bar{p})$ describing the input.
+	\end{itemize}
 \end{frame}
 
 
