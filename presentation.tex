@@ -52,7 +52,9 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
   \begin{theorem}[Fagin]<2->
     $∃SO$ captures $NP$.
   \end{theorem}
-  \uncover<3->{The $NP$-decidable properties of finite structures are exactly those that $∃SO$ can express.}
+  \uncover<3->{That is: the $NP$-decidable properties of finite structures are exactly those that $∃SO$ can express.}
+  
+  \medskip
   
   \uncover<4->{First machine-independent characterization of a complexity class (1974).}
  \begin{corollary}<5->
@@ -65,7 +67,7 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 \end{frame}
 
 \begin{frame}
-  \frametitle{Some Notation}
+  \frametitle{Encoding Structures}
   \begin{tabular}{rcl}
     $enc(\A)$ &…& encoding of structure $\A$.\\
     $\|\A\|$ &…& size of $enc(\A)$. Polynomial in $|A|$.
@@ -78,10 +80,10 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 	
   \medskip
 	
-  \uncover<3->{$enc(\A) = 0^n1s$, with $s$ a string of length $n^2$ that encodes $E$:}
+  \uncover<3->{$enc(\A) = 0^n1\cdot s$, with $s$ a string of length $n^2$ that encodes $E$:}
   
   \uncover<4->{\begin{align*}
-    s(in+j) &= \begin{cases} 1 &\text{if } i E j,\\ 0 &\text{otherwise.} \end{cases}\\
+    s(in+j) &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.} \end{cases}\\
     s &= \underbrace{s_0…s_{n-1}}_{\text{edges from $0$}}\underbrace{s_n…s_{2n-1}}_{\text{edges from $1$}}…\underbrace{s_{n(n-1)}…s_{n^2-1}}_{\text{edges from $n-1$}}
   \end{align*}}
   \end{block}
@@ -115,8 +117,8 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 	\uncover<1->{Intended interpretation of the predicates:}
 	\begin{itemize}
 	\item<2-> $L$ is a linear order. Define lexicographic order $<_k$ based on $L$.
-	\item<3-> $T_{*}(\bar{p}, \bar{t}) \leftrightarrow$ tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
-	\item<4-> $H_{q_i}(\bar{p},\bar{t}) \leftrightarrow$ at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{t}$.
+	\item<3-> $T_{*}(\bar{p}, \bar{t})$ … tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
+	\item<4-> $H_{q_i}(\bar{p},\bar{t})$ … at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{t}$.
 	\end{itemize}
 \end{frame}
 
@@ -145,6 +147,7 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 
 \begin{frame}
 	\frametitle{Construction of $ι(\bar{p})$ and $ξ(\bar{p})$}
+	\begin{block}{Initial state of $M$}
 	\begin{equation*}
 		∀\bar{p}∀\bar{t}\left(¬∃\bar{u} (\bar{u} <_k \bar{t}) → \left[
 		\begin{array}{rcl}
@@ -153,18 +156,19 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 		\end{array}		
 	\right]\right)
 	\end{equation*}
+	\medskip
 	\begin{tabular}{rcl}
 	$ι(\bar{p})$ &…& $enc(\A)$ contains $1$ at position $\bar{p}$\\
 	$ξ(\bar{p})$ &…& $\bar{p}$ is outside of $enc(\A)$
 	\end{tabular}
-	
-	Recall $enc(\A)$ for a graph:
+	\end{block}
+	\uncover<2->{Recall $enc(\A)$ for a graph:
 	\begin{align*}
 	 enc(\A) &= 0^n1s_1…s_{n^2-1},\\
-	 s(in+j) &= \begin{cases} 1 &\text{if } i E j,\\ 0 &\text{otherwise.}\end{cases}
-	\end{align*}
+	 s(in+j) &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.}\end{cases}
+	\end{align*}}
 
-	Suppose $k = 3$. Then a tuple $\bar{p} = (p_1,p_2,p_3)$ represents the position $p_1 n^2 + p_2 n + p_3$.
+	\uncover<3->{Suppose $k = 3$. Then a tuple $\bar{p} = (p_1,p_2,p_3)$ represents the position $p_1 n^2 + p_2 n + p_3$.}
 \end{frame}
 
 \begin{frame}
@@ -196,6 +200,7 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
   \uncover<5->{ξ(\bar{p}) &= (p_1 > 1) ∨ \left(p_1 = 1 ∧ p_2 > 1\right) ∨ \left(p_1 =1 ∧ p_2 = 1 ∧ p_3 > 0\right)}
   \end{align*}
   %\uncover<3->{Here, $x = 0$ means $¬∃y (y < x)$, etc.}
+  \uncover<6->{This concludes the proof of Fagin's theorem. \qed}
 \end{frame}
 
 
