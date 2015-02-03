@@ -6,6 +6,7 @@
 \usepackage{xstring}
 \usepackage{ulem}
 \usepackage{boxedminipage} 
+\usepackage{xspace} 
 
 \usepackage{tikz}
 \usetikzlibrary{chains,fit,shapes}
@@ -23,16 +24,10 @@
   }
 }
 
-\newcommand{\backupbegin}{
-   \newcounter{finalframe}
-   \setcounter{finalframe}{\value{framenumber}}
-}
-\newcommand{\backupend}{
-   \setcounter{framenumber}{\value{finalframe}}
-}
-
 \newcommand{\SO}{\ensuremath{\mathrm{SO}}}
 \newcommand{\FO}{\ensuremath{\mathrm{FO}}}
+\newcommand{\NP}{{\rm NP}\xspace}
+\newcommand{\SAT}{{\rm SAT}\xspace}
 \newcommand{\structa}{\ensuremath{\mathfrak{A}}}
 \newcommand{\minel}{\ensuremath{\underline{\mathrm{min}}}}
 \newcommand{\blankcell}{\ensuremath{T_{\Box}}}
@@ -40,6 +35,7 @@
 
 \title{Turing Machines and Finite Models}
 \author{Matthias Schlaipfer \and Sebastian Zivota}
+\date{February 5, 2015}
 
 \begin{document}
 
@@ -130,7 +126,7 @@
         \begin{boxedminipage}{.5\textwidth}
           \begin{tabbing}
             \quad\=\quad\=\quad\=\kill\\
-                {\tt halts}$(M,x)$\\
+                {\tt halts?}$(M,x)$\\
                 \>{\tt if} $\mathsf{encode}(\mathsf{sim}(M, x)) \in \mathbf{BTHP}$\\
                 \>\>yes\\
                 \>{\tt else}\\
@@ -164,7 +160,7 @@
 \begin{frame}
   \frametitle{Trakhtenbrot's Theorem and Failure of Completeness}
 
-  \begin{definition}[Finite Satisfiability]
+  \begin{definition}[Finite satisfiability]
     Given a vocabulary $\sigma$, a sentence $\phi$ in that vocabulary is called
     finitely satisfiable if there is a finite structure $\structa \in
     \mathrm{STRUCT}[\sigma]$ such that $\structa \models \phi$.
@@ -192,18 +188,74 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Definitions}
+
+  \begin{itemize}
+    \item $\sigma = \{<, \minel, \blankcell(\cdot, \cdot),
+    \nonblankcell(\cdot,\cdot), (H_q(\cdot, \cdot))_{q \in Q}\}$\\
+    \item $<$ is a linear order and $\minel$ is its minimal element (time,
+    positions)
+    \item Tape predicates $\blankcell(p,t), \nonblankcell(p,t)$
+    \item Head predicates $H_q(p,t)$
+  \end{itemize}
+ 
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definitions}
+
+  For example at time $t$:
+  \begin{center}
+  \begin{tikzpicture}
+    \tikzstyle{every path}=[very thick]
+
+    \edef\sizetape{0.7cm}
+    \tikzstyle{tmtape}=[draw,minimum size=\sizetape]
+    \tikzstyle{tmhead}=[arrow box,draw,minimum size=.5cm,arrow box
+    arrows={east:.25cm, west:0.25cm}]
+    \tikzstyle{tmprog}=[draw,minimum size=.5cm]
+
+    %% Draw TM tape
+    \begin{scope}[start chain=1 going right,node distance=-0.15mm]
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel$},tmtape] {$\Box$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+1$},tmtape] (input) {$\blacksquare$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+2$},tmtape] {$\blacksquare$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+3$},tmtape] (blankcell) {$\Box$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+4$},tmtape] {$\Box$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+5$},tmtape] {$\Box$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+6$},tmtape] {$\Box$};
+        \node [on chain=1,label={[label distance=2ex,text depth=5ex,rotate=90]right:$\minel+7$},tmtape] {$\Box$};
+        \node [on chain=1,tmtape,draw=none] {$\ldots$};
+    \end{scope}
+
+    %% Draw TM head below (input) tape cell
+    \node [tmhead,yshift=-.3cm] at (input.south) (head) {$q_9$};
+    %\node [tmprog,yshift=-1.7cm] at (head.south) (prog) {$\delta$};
+    %\draw [->] (prog) to (head);
+
+    \node at (4,-1) {$\blankcell(\minel+3, t)$} edge[->,bend left=15] (blankcell.south);
+    \node at (3,-2) {$H_{q_9}(\minel+1, t)$} edge[->,bend left=25] (head.south);
+
+    \end{tikzpicture}
+    \nocite{tm_figure}
+    \end{center}
+  
+\end{frame}
+
+\begin{frame}
   \frametitle{Encoding}
 
   \centering
   \begin{enumerate}
     \only<1->{\item $<$ is a linear order and $\minel$ is its minimal element}
-    \only<2->{\item Initially tape is blank}
+    \only<2->{\item Initially the tape is blank}
       \only<2>{\begin{align*}
-        H_{q_0}(\minel, \minel) \wedge \forall p \blankcell(p, \minel)
+        H_{q_0}(\minel, \minel) \wedge \forall p \; \blankcell(p, \minel)
       \end{align*}}
     \only<3->{\item Either a cell is blank or not}
       \only<3>{\begin{align*}
-        \forall p \forall t
+        \forall p \forall t \;
         \left(\blankcell(p, t)
         \Leftrightarrow \neg \nonblankcell(p, t)\right)
       \end{align*}}
@@ -213,25 +265,25 @@
         \wedge \\ \neg \exists p \exists t &\left( \bigvee_{q, q' \in Q, q \neq q'}
         H_q(p, t) \wedge H_{q'}(p,t) \right)
       \end{align*}}
-    \only<5->{\item Machine respects the transition relation}
-    %TODO
+    \only<5->{\item Machine respects the transition relation}\only<5>{ e.g.
+    $\delta(q, \Box) = (q', \blacksquare, \ell)$}
       \only<5>{\small \begin{align*}
-        \forall p \forall t 
+        \forall p \forall t \;
         \left(
           \begin{array}{cc}
-                   & p = \minel\\
+                   & p \neq \minel\\
             \wedge & \blankcell(p, t)\\
             \wedge & H_q(p,t)
           \end{array}
         \right)
           \Rightarrow
         \left(
-          \begin{array}{cc}
+          \begin{array}{cl}
                    & \nonblankcell(p, t+1)\\
-            \wedge & H_{q'}(p, t+1)\\
+            \wedge & H_{q'}(p-1, t+1)\\
             \wedge &
-              \begin{array}[x]{@{}c@{}} 
-            \forall p' \left(p \neq p' \Rightarrow \right. \\ \left. \left( \bigwedge_{i =
+              \begin{array}[x]{@{}l@{}} 
+            \forall p' \; \left(p \neq p' \Rightarrow \right. \\ \left. \left( \bigwedge_{i =
             \Box,\blacksquare} T_i(p',t+1) \Leftrightarrow
             T_i(p',t)\right)\right)
               \end{array}
@@ -240,15 +292,33 @@
       \end{align*}}
     \only<6->{\item Finally, the machine halts}
       \only<6>{\begin{align*}
-        \exists p \exists t \bigvee_{q \in Q_a \cup Q_r} H_q(p,t)
+        \exists p \exists t \; \bigvee_{q \in Q_a \cup Q_r} H_q(p,t)
       \end{align*}}
   \end{enumerate}
   
 \end{frame}
 
 \begin{frame}
-  \frametitle{Proof Argument}
+  \frametitle{Proof}
 
+  \begin{theorem}[Trakhtenbrot]
+    For every relational vocabulary $\sigma$ with at least one binary relation
+    symbol, it is undecidable whether a sentence $\phi$ of vocabulary
+    $\sigma$ is finitely satisfiable.
+  \end{theorem}
+  
+  \begin{alertblock}{Proof}
+
+  \begin{itemize}
+    \item A finite model of $\phi_M$ represents a computation of $M$ starting
+    from blank tape to a halting state
+    \item The set of all configurations of the halting computations of $M$ is a
+    finite model of $\phi_M$
+  \end{itemize}
+
+  $M$ halts on the empty input iff $\phi_M$ has a finite model. Since
+  \textbf{BTHP} is undecidable, so is finite satisfiability for $\phi_M$.
+  \end{alertblock}
   
 \end{frame}
 
@@ -264,6 +334,39 @@
     There is no recursive function $f$ such that if $\phi$ has a finite model,
     then it has a model of size at most $f(\phi)$.
   \end{corollary}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Corollaries}
+
+  \begin{corollary}[Cook]
+    \SAT is \NP-complete
+  \end{corollary}
+
+  \begin{alertblock}{Proof}
+    $\mathcal{P} \in \NP$
+    \begin{itemize}
+      \item $\phi \equiv \exists S_1, \ldots, \exists S_n \; \varphi$, such that
+      $\structa$ is in $\mathcal{P}$ iff $\structa \models \phi$ (Fagin)
+      \item $X = \{S_i(\vec{a}) \; | \; i = 1, \ldots, n, \vec{a} \in
+      A^{\text{arity}(S_i)}\}$
+      \item $\structa \models \phi$ iff $\alpha_{\phi}^{\structa}$ is
+      satisfiable
+      \item $\alpha_{\varphi}^{\structa}$ is obtained from $\varphi$
+        \begin{itemize}
+          \item replace $\exists x \, \psi(x, \cdot)$ by $\bigvee_{a \in A}
+          \psi(a, \cdot)$
+          \item replace $\forall x \, \psi(x, \cdot)$ by $\bigwedge_{a \in A}
+          \psi(a, \cdot)$
+          \item replace $R(\vec{a})$, for $R \in \sigma$ by its truth value in
+          $\structa$
+        \end{itemize}
+      \item $\structa \models \phi$ iff $\alpha_{\varphi}^{\structa}$ is
+      satisfiable. $\alpha_{\varphi}^{\structa}$ can be constructed by
+      deterministic logarithmic space machine
+    \end{itemize}
+  \end{alertblock}
   
 \end{frame}
 
