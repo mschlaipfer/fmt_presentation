@@ -135,8 +135,8 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 		\begin{equation*}
 		∀\bar{p}∀\bar{t}\left(¬∃\bar{u} (\bar{u} <_k \bar{t}) → \left[
 		\begin{array}{rcl}
-		ι(\bar{p},\bar{t})&\leftrightarrow&T_1(\bar{p},\bar{t})\\
-		∧\ ξ(\bar{p},\bar{t})&\leftrightarrow&T_{\_}(\bar{p},\bar{t})
+		ι(\bar{p})&\leftrightarrow&T_1(\bar{p},\bar{t})\\
+		∧\ ξ(\bar{p})&\leftrightarrow&T_{\_}(\bar{p},\bar{t})
 		\end{array}		
 		\right]\right)
 		\end{equation*}
@@ -145,10 +145,18 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 
 \begin{frame}
 	\frametitle{Construction of $ι(\bar{p})$ and $ξ(\bar{p})$}
-	\begin{align*}
-	ι(\bar{p}) &\leftrightarrow enc(\A) \text{ contains $1$ at position } \bar{p}\\
-	ξ(\bar{p}) &\leftrightarrow \bar{p} \text{ is outside of } enc(\A)
-	\end{align*}
+	\begin{equation*}
+		∀\bar{p}∀\bar{t}\left(¬∃\bar{u} (\bar{u} <_k \bar{t}) → \left[
+		\begin{array}{rcl}
+		ι(\bar{p})&\leftrightarrow&T_1(\bar{p},\bar{t})\\
+		∧\ ξ(\bar{p})&\leftrightarrow&T_{\_}(\bar{p},\bar{t})
+		\end{array}		
+	\right]\right)
+	\end{equation*}
+	\begin{tabular}{rcl}
+	$ι(\bar{p})$ &…& $enc(\A)$ contains $1$ at position $\bar{p}$\\
+	$ξ(\bar{p})$ &…& $\bar{p}$ is outside of $enc(\A)$
+	\end{tabular}
 	
 	Recall $enc(\A)$ for a graph:
 	\begin{align*}
