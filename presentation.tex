@@ -371,7 +371,7 @@
 
 \begin{frame}
 \frametitle{Fagin's Theorem}
-Reminder: $\exists SO$ is second order predicate logic with only existential quantifiers.
+Reminder: $\exists SO$ is second order predicate logic with only existential second order quantifiers.
   \begin{theorem}[Fagin]<2->
     $∃SO$ captures $NP$.
   \end{theorem}
@@ -392,8 +392,8 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 \begin{frame}
   \frametitle{Encoding Structures}
   \begin{tabular}{rcl}
-    $enc(\A)$ &…& encoding of structure $\A$.\\
-    $\|\A\|$ &…& size of $enc(\A)$. Polynomial in $|A|$.
+    $enc(\A)$ &…& encoding of structure $\A$ as a string of bits.\\
+    $\|\A\|$ &…& length of $enc(\A)$. Polynomial in $|A|$.
   \end{tabular}
  
   \medskip
@@ -406,7 +406,7 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
   \uncover<3->{$enc(\A) = 0^n1\cdot s$, with $s$ a string of length $n^2$ that encodes $E$:}
   
   \uncover<4->{\begin{align*}
-    s(in+j) &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.} \end{cases}\\
+    s_{in+j} &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.} \end{cases}\\
     s &= \underbrace{s_0…s_{n-1}}_{\text{edges from $0$}}\underbrace{s_n…s_{2n-1}}_{\text{edges from $1$}}…\underbrace{s_{n(n-1)}…s_{n^2-1}}_{\text{edges from $n-1$}}
   \end{align*}}
   \end{block}
@@ -415,7 +415,7 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 
 \begin{frame}
  \frametitle{Proof of Fagin's Theorem}
- Easy direction: Let $Φ$ be a sentence of $\exists SO$ and $\A$ a structure. Suppose $Φ = \exists S_1 … \exists S_n φ$ with $φ$ FO. Checking whether $\A \vDash Φ$ can be done by guessing $S_1,…,S_n$ and then checking $\A \vDash φ(S_1,…,S_n)$. The latter part is polynomial in $\|\A\|$.
+ Easy direction: Let $Φ$ be a sentence of $\exists SO$ and $\A$ a structure. Suppose $Φ = \exists S_1 … \exists S_n Ψ$ with $Ψ$ FO. Checking whether $\A \vDash Φ$ can be done by guessing $S_1,…,S_n$ and then checking $\A \vDash Ψ(S_1,…,S_n)$. The latter part is polynomial in $\|\A\|$.
  
  \medskip
  
@@ -431,17 +431,21 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 	\frametitle{Hard direction, ctd.}
 	We seek to construct a sentence
 	\begin{equation*}
-	∃L ∃T_0 ∃T_1 ∃T_{\_} ∃H_{q_0} … ∃H_{q_{m-1}} Ψ,
+	Φ = ∃L ∃T_0 ∃T_1 ∃T_{\_} ∃H_{q_0} … ∃H_{q_{m-1}} Ψ,
 	\end{equation*}
-	where $L$ is binary and the other predicates are $2k$-ary.
+	such that $\A \vDash Φ$ iff $M$ terminates in an accepting state on $enc(\A)$.
 	
 	\medskip
 	
-	\uncover<1->{Intended interpretation of the predicates:}
+	\uncover<2->{$L$ is binary and the other predicates are $2k$-ary.}
+	
+	\medskip
+	
+	\uncover<3->{Intended interpretation of the predicates:}
 	\begin{itemize}
-	\item<2-> $L$ is a linear order. Define lexicographic order $<_k$ based on $L$.
-	\item<3-> $T_{*}(\bar{p}, \bar{t})$ … tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
-	\item<4-> $H_{q_i}(\bar{p},\bar{t})$ … at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{t}$.
+	\item<3-> $L$ is a linear order. Define lexicographic order $<_k$ based on $L$.
+	\item<4-> $T_{*}(\bar{p}, \bar{t})$ … tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
+	\item<5-> $H_{q_i}(\bar{p},\bar{t})$ … at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{p}$.
 	\end{itemize}
 \end{frame}
 
@@ -482,13 +486,13 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 	\medskip
 	\begin{tabular}{rcl}
 	$ι(\bar{p})$ &…& $enc(\A)$ contains $1$ at position $\bar{p}$\\
-	$ξ(\bar{p})$ &…& $\bar{p}$ is outside of $enc(\A)$
+	$ξ(\bar{p})$ &…& $\bar{p}$ is outside of $enc(\A)$, i.e. $\bar{p} >_k \|\A\|$
 	\end{tabular}
 	\end{block}
 	\uncover<2->{Recall $enc(\A)$ for a graph:
 	\begin{align*}
-	 enc(\A) &= 0^n1s_1…s_{n^2-1},\\
-	 s(in+j) &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.}\end{cases}
+	 enc(\A) &= 0^n1s_0…s_{n^2-1},\\
+	 s_{in+j} &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.}\end{cases}
 	\end{align*}}
 
 	\uncover<3->{Suppose $k = 3$. Then a tuple $\bar{p} = (p_1,p_2,p_3)$ represents the position $p_1 n^2 + p_2 n + p_3$.}
@@ -496,6 +500,10 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 
 \begin{frame}
  \frametitle{Construction of $ι(\bar{p})$ and $ξ(\bar{p})$, ctd.}
+ \begin{equation*}
+  enc(\A) = 0^n1s_0…s_{n^2-1}
+ \end{equation*}
+
  Construct $ι$ and $ξ$ by case distinction:
  \begin{itemize}
   \item<2-> Positions $0,…,n-1$ are certainly $0$.
@@ -510,6 +518,8 @@ Reminder: $\exists SO$ is second order predicate logic with only existential qua
 %	p_1 = p_3 = 0, p_2 \neq 0 &\Rightarrow ι(\bar{p}) = E(p_2-2, n-1)
 %	\end{align*}
 
+  \vspace*{-0.5cm}
+  
   \begin{align*}
   \uncover<3->{ι(\bar{p}) &= \left[p_1 = 0 ∧ p_2 = 1 ∧ p_3 = 0\right]\\}
   \uncover<4->{&∨\ \left[\left(\begin{array}{rcl}
