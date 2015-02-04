@@ -1,7 +1,6 @@
 \documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{uniinput}
-\usepackage{proof}
 \usepackage[english]{babel}
 \usepackage{xstring}
 \usepackage{ulem}
@@ -32,6 +31,11 @@
 \newcommand{\minel}{\ensuremath{\underline{\mathrm{min}}}}
 \newcommand{\blankcell}{\ensuremath{T_{\Box}}}
 \newcommand{\nonblankcell}{\ensuremath{T_{\blacksquare}}}
+
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\A}{\mathcal{A}}
+\renewcommand{\P}{\mathcal{P}}
 
 \title{Turing Machines and Finite Models}
 \author{Matthias Schlaipfer \and Sebastian Zivota}
@@ -135,7 +139,6 @@
         \end{boxedminipage}
       \end{center}
   \end{itemize}
-
   
 \end{frame}
 
@@ -198,7 +201,6 @@
     \item Tape predicates $\blankcell(p,t), \nonblankcell(p,t)$
     \item Head predicates $H_q(p,t)$
   \end{itemize}
- 
   
 \end{frame}
 
@@ -337,6 +339,193 @@
   
 \end{frame}
 
+\section{Fagin's Theorem}
+
+\begin{frame}
+
+\huge
+\centering Fagin's Theorem
+  
+\end{frame}
+
+\begin{frame}
+  %\frametitle{title}
+
+	Goal: Machine-independent characterization of complexity classes
+	\begin{definition}<2->
+		Let $\mathcal{K}$ be a complexity class and $\mathcal{L}$ a logic. We say that $\L$ captures $\K$ if the following holds:
+		\begin{enumerate}
+			\item For every sentence $Φ$ of $\L$ and every finite structure $\A$, it is decidable in $\K$ whether $\A \vDash Φ$;
+			\item For every property $\P$ of finite structures decidable in $\K$ there is a sentence $Φ$ of $\L$ such that $\A$ has property $\P$ iff $\A \vDash Φ$.
+		\end{enumerate}
+	\end{definition}
+	
+	\medskip
+	
+	\uncover<3->{Briefly: We say that $\L$ captures $\K$ if the properties that can be decided in $\K$ are exactly those that can be defined in $\L$.}
+	
+	\medskip
+	
+	\uncover<4->{Application: Show that complexity classes are different by showing that their capturing logics are different.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Fagin's Theorem}
+Reminder: $\exists SO$ is second order predicate logic with only existential quantifiers.
+  \begin{theorem}[Fagin]<2->
+    $∃SO$ captures $NP$.
+  \end{theorem}
+  \uncover<3->{That is: the $NP$-decidable properties of finite structures are exactly those that $∃SO$ can express.}
+  
+  \medskip
+  
+  \uncover<4->{First machine-independent characterization of a complexity class (1974).}
+ \begin{corollary}<5->
+  $\forall SO$ captures $coNP$.
+ \end{corollary}
+  \uncover<6->{Application to the $P = NP$ problem:
+  \begin{equation*}
+   \forall SO \neq \exists SO \Rightarrow coNP \neq NP \Rightarrow P \neq NP
+  \end{equation*}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Encoding Structures}
+  \begin{tabular}{rcl}
+    $enc(\A)$ &…& encoding of structure $\A$.\\
+    $\|\A\|$ &…& size of $enc(\A)$. Polynomial in $|A|$.
+  \end{tabular}
+ 
+  \medskip
+ 
+  \begin{block}{Example}<2->
+  $\A = (A, E)$ with $A = \{0,…,n-1\}$ and $E$ binary.
+	
+  \medskip
+	
+  \uncover<3->{$enc(\A) = 0^n1\cdot s$, with $s$ a string of length $n^2$ that encodes $E$:}
+  
+  \uncover<4->{\begin{align*}
+    s(in+j) &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.} \end{cases}\\
+    s &= \underbrace{s_0…s_{n-1}}_{\text{edges from $0$}}\underbrace{s_n…s_{2n-1}}_{\text{edges from $1$}}…\underbrace{s_{n(n-1)}…s_{n^2-1}}_{\text{edges from $n-1$}}
+  \end{align*}}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+ \frametitle{Proof of Fagin's Theorem}
+ Easy direction: Let $Φ$ be a sentence of $\exists SO$ and $\A$ a structure. Suppose $Φ = \exists S_1 … \exists S_n φ$ with $φ$ FO. Checking whether $\A \vDash Φ$ can be done by guessing $S_1,…,S_n$ and then checking $\A \vDash φ(S_1,…,S_n)$. The latter part is polynomial in $\|\A\|$.
+ 
+ \medskip
+ 
+ \uncover<2->{Hard direction: Similar to proof of Trakhtenbrot's theorem, but a bit more involved.}
+ \begin{itemize}
+ 	\item<3-> Given: ND Turing machine $M$ that takes encodings of structures as input and tests whether property $\P$ holds.
+ 	\item<4-> If $n$ is the size of the structure, assume that $M$ runs in time $n^k$ for some $k$ and visits the entire input.
+ 	\item<5-> Can describe both time and space on tape as $k$-tuples of elements of the model.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Hard direction, ctd.}
+	We seek to construct a sentence
+	\begin{equation*}
+	∃L ∃T_0 ∃T_1 ∃T_{\_} ∃H_{q_0} … ∃H_{q_{m-1}} Ψ,
+	\end{equation*}
+	where $L$ is binary and the other predicates are $2k$-ary.
+	
+	\medskip
+	
+	\uncover<1->{Intended interpretation of the predicates:}
+	\begin{itemize}
+	\item<2-> $L$ is a linear order. Define lexicographic order $<_k$ based on $L$.
+	\item<3-> $T_{*}(\bar{p}, \bar{t})$ … tape contains $*$ at position $\bar{p}$ and time $\bar{t}$ for $* ∈ \{0, 1, \_\}$.
+	\item<4-> $H_{q_i}(\bar{p},\bar{t})$ … at time $\bar{t}$, the machine is in state $q_{i}$ and the head is in position $\bar{t}$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Construction of $Ψ$}
+	$Ψ$ is a conjunction of several formulas:
+	\begin{itemize}
+		\item<2-> $L$ is a linear order.
+		\item<3-> Tape and state are well-defined and $M$ eventually arrives in an accepting state. Exactly as in the proof of Trakhtenbrot.
+		\item<4-> Sentences describing the transition function: For $a ∈ Δ, q ∈ Q$,
+		\begin{equation*}
+		\bigvee_{(q',a',mv) ∈ δ(q,a)} α_{(q,a,q',a',mv)},
+		\end{equation*}
+		where $α_{(q,a,q',a',mv)}$ is as in the previous proof.
+		\item<5-> A formula describing the initial state of the tape (i.e. $enc(\A)$):
+		\begin{equation*}
+		∀\bar{p}∀\bar{t}\left(¬∃\bar{u} (\bar{u} <_k \bar{t}) → \left[
+		\begin{array}{rcl}
+		ι(\bar{p})&\leftrightarrow&T_1(\bar{p},\bar{t})\\
+		∧\ ξ(\bar{p})&\leftrightarrow&T_{\_}(\bar{p},\bar{t})
+		\end{array}		
+		\right]\right)
+		\end{equation*}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Construction of $ι(\bar{p})$ and $ξ(\bar{p})$}
+	\begin{block}{Initial state of $M$}
+	\begin{equation*}
+		∀\bar{p}∀\bar{t}\left(¬∃\bar{u} (\bar{u} <_k \bar{t}) → \left[
+		\begin{array}{rcl}
+		ι(\bar{p})&\leftrightarrow&T_1(\bar{p},\bar{t})\\
+		∧\ ξ(\bar{p})&\leftrightarrow&T_{\_}(\bar{p},\bar{t})
+		\end{array}		
+	\right]\right)
+	\end{equation*}
+	\medskip
+	\begin{tabular}{rcl}
+	$ι(\bar{p})$ &…& $enc(\A)$ contains $1$ at position $\bar{p}$\\
+	$ξ(\bar{p})$ &…& $\bar{p}$ is outside of $enc(\A)$
+	\end{tabular}
+	\end{block}
+	\uncover<2->{Recall $enc(\A)$ for a graph:
+	\begin{align*}
+	 enc(\A) &= 0^n1s_1…s_{n^2-1},\\
+	 s(in+j) &= \begin{cases} 1 &\text{if } i {E} j,\\ 0 &\text{otherwise.}\end{cases}
+	\end{align*}}
+
+	\uncover<3->{Suppose $k = 3$. Then a tuple $\bar{p} = (p_1,p_2,p_3)$ represents the position $p_1 n^2 + p_2 n + p_3$.}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Construction of $ι(\bar{p})$ and $ξ(\bar{p})$, ctd.}
+ Construct $ι$ and $ξ$ by case distinction:
+ \begin{itemize}
+  \item<2-> Positions $0,…,n-1$ are certainly $0$.
+  \item<3-> Position $n$ is certainly $1$.
+  \item<4-> Treat positions $n+1$ to $n^2 + n$ according to $E$.
+  \item<5-> All positions from $n^2 + n + 1$ onward must be blank.
+ \end{itemize}
+%	\begin{align*}
+%	p_1 > 1 &\Rightarrow ι(\bar{p}) = \bot\\
+%	p_1 = p_2 = 0 &\Rightarrow ι(\bar{p}) = \bot\\
+%	p_1 = 0, p_2,p_3 \neq 0 &\Rightarrow ι(\bar{p}) = E(p_2-1, p_3-1)\\
+%	p_1 = p_3 = 0, p_2 \neq 0 &\Rightarrow ι(\bar{p}) = E(p_2-2, n-1)
+%	\end{align*}
+
+  \begin{align*}
+  \uncover<3->{ι(\bar{p}) &= \left[p_1 = 0 ∧ p_2 = 1 ∧ p_3 = 0\right]\\}
+  \uncover<4->{&∨\ \left[\left(\begin{array}{rcl}
+  p_1 &=& 0 \\
+  ∧\ p_2 &>& 0
+  \end{array}\right) ∧ \left(\begin{array}{rclcl}
+  p_3 &\neq& 0 &∧& E(p_2-1, p_3-1)\\
+  ∨\ p_3 &=& 0 &∧& E(p_2-2, n-1)
+  \end{array}\right)\right]\\}
+  \uncover<4->{&∨\ \left[p_1 = 1 ∧ … \right]\\}
+  \uncover<5->{ξ(\bar{p}) &= (p_1 > 1) ∨ \left(p_1 = 1 ∧ p_2 > 1\right) ∨ \left(p_1 =1 ∧ p_2 = 1 ∧ p_3 > 0\right)}
+  \end{align*}
+  %\uncover<3->{Here, $x = 0$ means $¬∃y (y < x)$, etc.}
+  \uncover<6->{This concludes the proof of Fagin's theorem. \qed}
+\end{frame}
+
 \begin{frame}
   \frametitle{Corollaries}
 
@@ -377,8 +566,9 @@
   }
 \end{frame}
 
+
+
 \section{}
 \bibliography{presentation}
 \bibliographystyle{plain}
-
 \end{document}
